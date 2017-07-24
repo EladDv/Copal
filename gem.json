@@ -1,0 +1,11 @@
+{
+    "GemFormatVersion": 3,
+    "Uuid": "eb5eede2084941298c1ae62540c57e2f",
+    "Name": "Copal",
+    "DisplayName": "Copal",
+    "Version": "0.1.0",
+    "LinkType": "Dynamic",
+    "Summary": "A short description of my Gem.",
+    "Tags": ["Untagged"],
+    "IconPath": "preview.png"
+}

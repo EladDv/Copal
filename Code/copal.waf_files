@@ -1,0 +1,39 @@
+{
+    "none": {
+        "Source": [
+            "Source/StdAfx.cpp",
+            "Source/StdAfx.h"
+        ]
+    },
+    "auto": {
+        "Include": [
+            "Include/Copal/CopalBus.h"
+        ],
+        "Source": [
+            "Source/CopalModule.cpp",
+            "Source/CopalSystemComponent.cpp",
+            "Source/CopalSystemComponent.h",
+
+            "Source/Components/CopalForceAggregatorComponent.h",
+            "Source/Components/CopalForceAggregatorComponent.cpp",
+
+            "Source/Components/SimpleOscillatorCopalComponent.h",
+            "Source/Components/SimpleOscillatorCopalComponent.cpp",
+
+            "Source/Components/SimpleSpringCopalComponent.h",
+            "Source/Components/SimpleSpringCopalComponent.cpp",
+
+            "Source/Components/LocalGravityCopalComponent.h",
+            "Source/Components/LocalGravityCopalComponent.cpp",
+            
+            "Source/Components/ConstantEMFieldCopalComponent.h",
+            "Source/Components/ConstantEMFieldCopalComponent.cpp",
+            
+            "Source/Components/CopalChargedForceAggregatorComponent.h",
+            "Source/Components/CopalChargedForceAggregatorComponent.cpp",
+
+            "Source/Components/CopalForceSourceComponent.h",
+            "Source/Components/CopalForceSourceComponent.cpp"
+        ]
+    }
+}
