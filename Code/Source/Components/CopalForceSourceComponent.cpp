@@ -7,7 +7,7 @@
 #include <AzCore\Serialization\EditContext.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 
-#include "..\..\..\Code\Engine\LmbrCentral\include\LmbrCentral\Physics\PhysicsComponentBus.h"
+#include <LmbrCentral\Physics\PhysicsComponentBus.h>
 #include <MathConversion.h>
 
 namespace Copal

@@ -1,11 +1,20 @@
 {
-    "GemFormatVersion": 3,
-    "Uuid": "eb5eede2084941298c1ae62540c57e2f",
-    "Name": "Copal",
-    "DisplayName": "Copal",
-    "Version": "0.1.0",
-    "LinkType": "Dynamic",
-    "Summary": "A short description of my Gem.",
-    "Tags": ["Untagged"],
-    "IconPath": "preview.png"
+  "GemFormatVersion": 3,
+  "Uuid": "eb5eede2084941298c1ae62540c57e2f",
+  "Name": "Copal",
+  "DisplayName": "Copal",
+  "Version": "0.4.2",
+  "LinkType": "Dynamic",
+  "Summary": "A community driven simplification of the physics system - based on forces rather than impulses.",
+  "Tags": [ "Physics" ],
+  "IconPath": "preview.png",
+  "Dependencies": [
+    {
+      "Uuid": "ff06785f7145416b9d46fde39098cb0c",
+      "VersionConstraints": [
+        "~>0.1"
+      ],
+      "_comment": "LmbrCentral"
+    }
+  ]
 }

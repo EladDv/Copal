@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CopalForceSourceComponent.h"
-#include "..\..\..\Code\Engine\LmbrCentral\include\LmbrCentral\Scripting\TriggerAreaComponentBus.h"
+#include <LmbrCentral\Scripting\TriggerAreaComponentBus.h>
 
 namespace Copal
 {

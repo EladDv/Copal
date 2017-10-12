@@ -8,7 +8,7 @@
 #include <AzCore\Serialization\SerializeContext.h>
 #include <AzCore\Serialization\EditContext.h>
 
-#include "..\..\..\Code\Engine\LmbrCentral\include\LmbrCentral\Physics\PhysicsComponentBus.h"
+#include <LmbrCentral\Physics\PhysicsComponentBus.h>
 
 #include <physinterface.h>
 

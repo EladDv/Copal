@@ -12,13 +12,13 @@
 #include <AzCore\Component\EntityBus.h>
 #include <AzCore\Math\Transform.h>
 #include <AzCore\Component\TickBus.h>
-#include "..\..\..\Code\Engine\LmbrCentral\include\LmbrCentral\Physics\PhysicsSystemComponentBus.h"
+#include <LmbrCentral\Physics\PhysicsSystemComponentBus.h>
 
 #include <AzCore\Serialization\SerializeContext.h>
 #include <AzCore\Serialization\EditContext.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 
-#include "..\..\..\Code\Engine\LmbrCentral\include\LmbrCentral\Physics\PhysicsComponentBus.h"
+#include <LmbrCentral\Physics\PhysicsComponentBus.h>
 #include <MathConversion.h>
 #include <ISystem.h>
 #include <ITimer.h>

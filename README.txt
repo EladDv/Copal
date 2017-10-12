@@ -1,6 +1,6 @@
 COPAL - Community Physics Additions for Lumberyard
 
-Version: 0.4.1
+Version: 0.4.2
 
 -------------------------------------------------------------------------------------------------
 
@@ -13,9 +13,12 @@ Installation notes:
 -------------------------------------------------------------------------------------------------
 
 Changelog:
+0.4.2 - fixed for Lumberyard 1.11 and possibly 1.10
+- Fixed dependencies for Lumberyard 1.10 and 1.11 (by Uriah)
+
 0.4.1 - Global areas out, Ignore params in.
 
-- Removed the global areas for gravity and buoyancy and replaced them with flags on aggregators.
+- Removed the global areas for gravity and buoyancy and replaced them with flags on aggregators. (by Gamely)
 
 -------------------------------------------------------------------------------------------------
 0.4.0 - Force struct and Force tag system
@@ -48,6 +51,7 @@ Changelog:
 
 Autors: 
 EladDv
-
+Gamely
+Uriah
 -------------------------------------------------------------------------------------------------
 This work is licensed under the GPL-3.0+ license
