@@ -1,6 +1,6 @@
 COPAL - Community Physics Additions for Lumberyard
 
-Version: 0.4.2
+Version: 0.4.2.1
 
 -------------------------------------------------------------------------------------------------
 
@@ -13,6 +13,11 @@ Installation notes:
 -------------------------------------------------------------------------------------------------
 
 Changelog:
+
+0.4.2.1 - Changed to MIT license
+- Changed to MIT license
+
+--------------------------------------------------------------------------------------------------
 
 0.4.2 - fixed for Lumberyard 1.11 and possibly 1.10
 - Fixed dependencies for Lumberyard 1.10 and 1.11 (by Uriah)
@@ -57,4 +62,4 @@ EladDv
 Gamely
 Uriah
 -------------------------------------------------------------------------------------------------
-This work is licensed under the GPL-3.0+ license
+This work is licensed under the MIT license
