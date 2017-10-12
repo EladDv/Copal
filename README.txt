@@ -6,15 +6,18 @@ Version: 0.4.2
 
 Installation notes:
 
-1) Extract this zip into your Amazon\Lumberyard\1.9.0.0\dev\Gems folder.
+1) Extract this zip into your Amazon\Lumberyard\1.X.0.0\dev\Gems folder.
 2) In the project configurator add this Gem to your project
 3) Build the project.
 
 -------------------------------------------------------------------------------------------------
 
 Changelog:
+
 0.4.2 - fixed for Lumberyard 1.11 and possibly 1.10
 - Fixed dependencies for Lumberyard 1.10 and 1.11 (by Uriah)
+
+--------------------------------------------------------------------------------------------------
 
 0.4.1 - Global areas out, Ignore params in.
 
