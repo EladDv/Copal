@@ -111,8 +111,6 @@ namespace Copal
 		if (GetGlobalGravityEnabled())
 		{
 			pe_action_impulse impulseAction;
-			pe_status_dynamics physicsStatus;
-			EBUS_EVENT_ID(GetEntityId(), LmbrCentral::CryPhysicsComponentRequestBus, GetPhysicsStatus, physicsStatus);
 			Gvec = m_GlobalGravity * physicsStatus.mass;
 			//PrintVector3("Gravity", m_GlobalGravity);
 			//PrintVector3("Gravity", Gvec);
