@@ -5,8 +5,7 @@
 #include <AzCore/Serialization/EditContext.h>
 
 #include "CopalSystemComponent.h"
-#include <physinterface.h>
-#include <MathConversion.h>
+
 
 namespace Copal
 {
@@ -22,7 +21,6 @@ namespace Copal
             {
                 ec->Class<CopalSystemComponent>("Copal", "[Description of functionality provided by this System Component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        // ->Attribute(AZ::Edit::Attributes::Category, "") Set a category
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("System"))
                         ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ;
@@ -56,11 +54,11 @@ namespace Copal
 
     void CopalSystemComponent::Activate()
     {
-        CopalRequestBus::Handler::BusConnect();
+        //CopalPhysicsRequestsBus::Handler::BusConnect();
     }
 
     void CopalSystemComponent::Deactivate()
     {
-        CopalRequestBus::Handler::BusDisconnect();
+		//CopalPhysicsRequestsBus::Handler::BusDisconnect();
     }
 }

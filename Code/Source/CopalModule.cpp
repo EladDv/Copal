@@ -2,14 +2,17 @@
 #include "StdAfx.h"
 #include <platform_impl.h>
 
+#include <AzCore/Memory/SystemAllocator.h>
+
 #include "CopalSystemComponent.h"
-#include "Components\CopalForceAggregatorComponent.h"
-#include "Components\CopalForceSourceComponent.h"
-#include "Components\SimpleOscillatorCopalComponent.h"
-#include "Components\SimpleSpringCopalComponent.h"
-#include "Components\LocalGravityCopalComponent.h"
-#include "Components\ConstantEMFieldCopalComponent.h"
-#include "Components\CopalChargedForceAggregatorComponent.h"
+#include "AggregatorBaseComponent.h"
+#include "ForceBaseComponent.h"
+#include "ConstantForceCopalComponent.h"
+#include "SimpleSpringForceComponent.h"
+#include "LocalGravityComponent.h"
+#include "LocalConstantEMFieldComponent.h"
+#include "HarmonicOscillatorComponent.h"
+#include "EMAggregatorComponent.h"
 
 #include <IGem.h>
 
@@ -19,21 +22,22 @@ namespace Copal
         : public CryHooksModule
     {
     public:
-        AZ_RTTI(CopalModule, "{DE98217F-37F6-47CA-AE4E-639533FDBEC2}", CryHooksModule);
+        AZ_RTTI(CopalModule, "{E43C31D5-1484-44A7-9D24-B2801D14C60F}", CryHooksModule);
+        AZ_CLASS_ALLOCATOR(CopalModule, AZ::SystemAllocator, 0);
 
         CopalModule()
             : CryHooksModule()
         {
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             m_descriptors.insert(m_descriptors.end(), {
-                CopalSystemComponent::CreateDescriptor(),
-				CopalForceAggregatorComponent::CreateDescriptor(),
-				CopalForceSourceComponent::CreateDescriptor(),
-				SimpleOscillatorCopalComponent::CreateDescriptor(),
-				SimpleSpringCopalComponent::CreateDescriptor(),
-				LocalGravityCopalComponent::CreateDescriptor(),
-				ConstantEMFieldCopalComponent::CreateDescriptor(),
-				CopalChargedForceAggregatorComponent::CreateDescriptor(),
+				CopalSystemComponent::CreateDescriptor(),
+				ConstantForceComponent::CreateDescriptor(),
+				AggregatorBaseComponent::CreateDescriptor(),
+				SimpleSpringForceComponent::CreateDescriptor(),
+				LocalGravityComponent::CreateDescriptor(),
+				LocalConstantEMFieldComponent::CreateDescriptor(),
+				EMAggregatorComponent::CreateDescriptor(),
+				HarmonicOscillatorComponent::CreateDescriptor()
 			});
         }
 
@@ -52,4 +56,4 @@ namespace Copal
 // DO NOT MODIFY THIS LINE UNLESS YOU RENAME THE GEM
 // The first parameter should be GemName_GemIdLower
 // The second should be the fully qualified name of the class above
-AZ_DECLARE_MODULE_CLASS(Copal_eb5eede2084941298c1ae62540c57e2f, Copal::CopalModule)
+AZ_DECLARE_MODULE_CLASS(Copal_53423b5a4c29446cb2832e46d6846443, Copal::CopalModule)

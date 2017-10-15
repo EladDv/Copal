@@ -9,10 +9,10 @@ namespace Copal
 {
     class CopalSystemComponent
         : public AZ::Component
-        , protected CopalRequestBus::Handler
+        //, protected CopalPhysicsRequestsBus::Handler
     {
     public:
-        AZ_COMPONENT(CopalSystemComponent, "{CB1CB713-F4D1-4FED-9710-46F8D7DA1D28}");
+        AZ_COMPONENT(CopalSystemComponent, "{3579E77B-8A22-41A4-A417-9DBC05CE35D6}");
 
         static void Reflect(AZ::ReflectContext* context);
 

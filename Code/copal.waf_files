@@ -11,29 +11,34 @@
         ],
         "Source": [
             "Source/CopalModule.cpp",
+
+            "Source/ForceBaseComponent.cpp",
+            "Source/ForceBaseComponent.h",
+
+            "Source/AggregatorBaseComponent.cpp",
+            "Source/AggregatorBaseComponent.h",
+
+            "Source/ConstantForceCopalComponent.cpp",
+            "Source/ConstantForceCopalComponent.h",
+            
+            "Source/EMAggregatorComponent.cpp",
+            "Source/EMAggregatorComponent.h",
+            
+            "Source/HarmonicOscillatorComponent.cpp",
+            "Source/HarmonicOscillatorComponent.h",
+            
+            "Source/LocalConstantEMFieldComponent.cpp",
+            "Source/LocalConstantEMFieldComponent.h",
+            
+            "Source/SimpleSpringForceComponent.cpp",
+            "Source/SimpleSpringForceComponent.h",
+
+            "Source/LocalGravityComponent.cpp",
+            "Source/LocalGravityComponent.h",
+
             "Source/CopalSystemComponent.cpp",
-            "Source/CopalSystemComponent.h",
+            "Source/CopalSystemComponent.h"
 
-            "Source/Components/CopalForceAggregatorComponent.h",
-            "Source/Components/CopalForceAggregatorComponent.cpp",
-
-            "Source/Components/SimpleOscillatorCopalComponent.h",
-            "Source/Components/SimpleOscillatorCopalComponent.cpp",
-
-            "Source/Components/SimpleSpringCopalComponent.h",
-            "Source/Components/SimpleSpringCopalComponent.cpp",
-
-            "Source/Components/LocalGravityCopalComponent.h",
-            "Source/Components/LocalGravityCopalComponent.cpp",
-            
-            "Source/Components/ConstantEMFieldCopalComponent.h",
-            "Source/Components/ConstantEMFieldCopalComponent.cpp",
-            
-            "Source/Components/CopalChargedForceAggregatorComponent.h",
-            "Source/Components/CopalChargedForceAggregatorComponent.cpp",
-
-            "Source/Components/CopalForceSourceComponent.h",
-            "Source/Components/CopalForceSourceComponent.cpp"
         ]
     }
 }
