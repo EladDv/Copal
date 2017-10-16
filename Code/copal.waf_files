@@ -35,6 +35,10 @@
 
             "Source/LocalGravityComponent.cpp",
             "Source/LocalGravityComponent.h",
+            
+            "Source/InertialFrameComponent.cpp",
+            "Source/InertialFrameComponent.h",
+
 
             "Source/CopalSystemComponent.cpp",
             "Source/CopalSystemComponent.h"

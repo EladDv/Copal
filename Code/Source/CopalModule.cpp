@@ -13,6 +13,7 @@
 #include "LocalConstantEMFieldComponent.h"
 #include "HarmonicOscillatorComponent.h"
 #include "EMAggregatorComponent.h"
+#include "InertialFrameComponent.h"
 
 #include <IGem.h>
 
@@ -29,7 +30,7 @@ namespace Copal
             : CryHooksModule()
         {
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-            m_descriptors.insert(m_descriptors.end(), {
+			m_descriptors.insert(m_descriptors.end(), {
 				CopalSystemComponent::CreateDescriptor(),
 				ConstantForceComponent::CreateDescriptor(),
 				AggregatorBaseComponent::CreateDescriptor(),
@@ -37,7 +38,8 @@ namespace Copal
 				LocalGravityComponent::CreateDescriptor(),
 				LocalConstantEMFieldComponent::CreateDescriptor(),
 				EMAggregatorComponent::CreateDescriptor(),
-				HarmonicOscillatorComponent::CreateDescriptor()
+				HarmonicOscillatorComponent::CreateDescriptor(),
+				InertialFrameComponent::CreateDescriptor()
 			});
         }
 
