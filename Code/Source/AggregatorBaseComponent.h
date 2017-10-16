@@ -60,6 +60,8 @@ namespace Copal
 			Force* GetTorqe(const AZStd::string) override;
 			void GetAllTorques(CopalForceMap* outParam) override { outParam = &TorquesMap; }
 
+			void GetComponentEntityId(AZ::EntityId id) override { id = GetEntityId(); }
+
 			AZStd::list < AZStd::string >* GetHandledTags() { return &HandledTags; }
 			void GetHandledTags(AZStd::list < AZStd::string >* TagList) { HandledTags = *TagList; }
 

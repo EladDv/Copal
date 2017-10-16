@@ -56,22 +56,35 @@ namespace Copal
 
 	void HarmonicOscillatorComponent::OnPostPhysicsUpdate()
 	{
+
+		if (AttachedEntity.IsValid() && AttachedHandler == nullptr) // This will make sure you send the force on the first go (if the entity is valid) 
+			AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(AttachedEntity);
+
+		if (!ForceEnabled)
+		{
+			if (AttachedHandler != nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
+				AttachedHandler->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+			return;
+		}
+
 		AZ::Vector3 AttachedEntityLocation = AZ::Vector3(0, 0, 0); // Necessary for GetWorldTM to return a meaninful and correct Transform
 		AZ::Vector3 CurrentEntityLocation = AZ::Vector3(0, 0, 0); // Necessary for GetWorldTM to return a meaninful and correct Transform
 		AZ::TransformBus::EventResult(AttachedEntityLocation, AttachedEntity, &AZ::TransformBus::Events::GetWorldTranslation);
 		AZ::TransformBus::EventResult(CurrentEntityLocation, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
 		pe_status_dynamics physicsStatus;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(GetAttachedEntity(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+		LmbrCentral::CryPhysicsComponentRequestBus::Event(AttachedEntity, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 
 		AZ::Vector3 ForceToApply = CurrentEntityLocation - AttachedEntityLocation;
-		ForceToApply = ForceToApply * (4 * pow(AZ::Constants::Pi, 2)) *  (physicsStatus.mass / pow(Period, 2));
+		ForceToApply = ForceToApply * (4 * pow(AZ::Constants::Pi, 2)) *  (physicsStatus.mass / pow(Period, 2)); // Calculate force of oscillator
 
 		Force OscillatorForce;
 		OscillatorForce.strengthVector = ForceToApply;
 		OscillatorForce.tag = ForceTag;
 
-		CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, OscillatorForce);
+		if (AttachedHandler != nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
+			AttachedHandler->AddForce(ForceName, OscillatorForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+
 	}
 
 }

@@ -18,7 +18,13 @@ namespace Copal
 		void SetForceEnabled(bool e) { ForceEnabled = e; }
 
 		float GetPeriod() { return Period; }
+		float SetPeriod(float f) { Period = f; }
 		AZ::EntityId GetAttachedEntity() { return AttachedEntity; }
+		void SetAttachedEntity(AZ::EntityId e)
+		{
+			AttachedEntity = e;
+			AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
+		}
 
 
 	protected:
@@ -26,6 +32,7 @@ namespace Copal
 		AZStd::string ForceTag;
 
 		AZ::EntityId AttachedEntity;
+		Copal::CopalPhysicsRequests* AttachedHandler;
 
 		bool ForceEnabled = false;
 		float Period = 0;

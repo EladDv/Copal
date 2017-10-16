@@ -15,12 +15,18 @@ namespace Copal
 			void OnPostPhysicsUpdate() override;
 
 			bool GetForceEnabled() { return ForceEnabled; }
-			void SetForceEnabled(bool e) { ForceEnabled = e; }
+			void SetForceEnabled(bool e) { ForceEnabled = e; ForceUpdated = false; }
 
 			AZ::Vector3 GetForceVector() { return ForceVector; }
-			void SetForceVector(AZ::Vector3 v) { ForceVector = v; }
+			void SetForceVector(AZ::Vector3 v) { ForceVector = v; ForceUpdated = false; }
 
 			AZ::EntityId GetAttachedEntity() { return AttachedEntity; }
+			void SetAttachedEntity(AZ::EntityId e)
+			{
+				AttachedEntity = e;
+				AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
+				ForceUpdated = false;
+			}
 
 
 		protected:
@@ -28,8 +34,10 @@ namespace Copal
 			AZStd::string ForceTag;
 
 			AZ::EntityId AttachedEntity;
+			Copal::CopalPhysicsRequests* AttachedHandler;
 
 			bool ForceEnabled = false;
+			bool ForceUpdated = false; // Save CPU cycles on already updated forces
 			AZ::Vector3 ForceVector = AZ::Vector3(0, 0, 0);
 
 	};

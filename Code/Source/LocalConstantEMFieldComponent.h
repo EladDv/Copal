@@ -44,7 +44,7 @@ namespace Copal
 		AZStd::string ForceName;
 		AZStd::string ForceTag = "Electromagnetic";
 
-		AZStd::vector<AZ::EntityId> AffectedEntities;
+		AZStd::vector<Copal::CopalPhysicsRequests*> AffectedEntityChannels;
 
 		bool ElectricForceEnabled = false;
 		bool MagneticForceEnabled = false;

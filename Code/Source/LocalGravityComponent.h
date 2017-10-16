@@ -29,19 +29,20 @@ namespace Copal
 		void OnTriggerAreaExited(AZ::EntityId) override;
 
 		bool GetGravityEnabled() { return GravityEnabled; }
-		void SetGravityEnabled(bool enabled) { GravityEnabled = enabled; }
+		void SetGravityEnabled(bool enabled) { GravityEnabled = enabled; ForceUpdated = false; }
 
 
 		AZ::Vector3 GetGravitationalAcceleration() { return GravitationalAcceleration; }
-		void SetGravitationalAcceleration(AZ::Vector3 fieldVector) { GravitationalAcceleration = fieldVector; }
+		void SetGravitationalAcceleration(AZ::Vector3 fieldVector) { GravitationalAcceleration = fieldVector; ForceUpdated = false; }
 
 	protected:
 		AZStd::string ForceName;
 		AZStd::string ForceTag;
 
-		AZStd::vector<AZ::EntityId> AffectedEntities;
+		AZStd::vector<Copal::CopalPhysicsRequests*> AffectedEntityChannels;
 
 		bool GravityEnabled = false;
+		bool ForceUpdated = false; // Save CPU cycles on already updated forces
 
 		AZ::Vector3 GravitationalAcceleration = AZ::Vector3(0, 0, 0);
 

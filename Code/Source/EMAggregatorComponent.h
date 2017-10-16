@@ -15,8 +15,8 @@ namespace Copal
 		// Required Reflect function.
 		static void Reflect(AZ::ReflectContext* context);
 
-		void UseDensity(float density);
-		void UseCharge(float charge);
+		void SetDensity(float density);
+		void SetCharge(float charge);
 
 		float GetDensity() { return ChargeDensity; }
 		float GetCharge() { return Charge; }

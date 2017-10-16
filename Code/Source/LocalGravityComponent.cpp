@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "LocalGravityComponent.h"
+#include "AggregatorBaseComponent.h"
 namespace Copal
 {
 	void LocalGravityComponent::Reflect(AZ::ReflectContext* reflection)
@@ -12,7 +13,6 @@ namespace Copal
 				->Version(2)
 				->Field("ForceName", &LocalGravityComponent::ForceName)
 				->Field("ForceTag", &LocalGravityComponent::ForceTag)
-				->Field("AffectedEntities", &LocalGravityComponent::AffectedEntities)
 				->Field("GravityEnabled", &LocalGravityComponent::GravityEnabled)
 				->Field("GravitationalAcceleration", &LocalGravityComponent::GravitationalAcceleration)
 				;
@@ -65,36 +65,49 @@ namespace Copal
 
 	void LocalGravityComponent::OnTriggerAreaEntered(AZ::EntityId e)
 	{
-		AffectedEntities.push_back(e);
+		auto EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
+		if (EntityBusChannel != nullptr)
+			AffectedEntityChannels.push_back(EntityBusChannel);
+		ForceUpdated = false;
 	}
 
 	void LocalGravityComponent::OnTriggerAreaExited(AZ::EntityId e)
 	{
-		AZStd::vector<AZ::EntityId>::iterator position = AZStd::find(AffectedEntities.begin(), AffectedEntities.end(), e);
-		if (position != AffectedEntities.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
-			AffectedEntities.erase(position);
-		CopalPhysicsRequestsBus::Event(e, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
-
+		Copal::CopalPhysicsRequests* EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
+		AZStd::vector<Copal::CopalPhysicsRequests*>::iterator position = AZStd::find(AffectedEntityChannels.begin(), 
+																					 AffectedEntityChannels.end(), EntityBusChannel);
+		if (position != AffectedEntityChannels.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
+			AffectedEntityChannels.erase(position);
+		if(EntityBusChannel != nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
+			EntityBusChannel->RemoveForce(ForceName);
+		ForceUpdated = false;
 	}
 
 	void LocalGravityComponent::OnPostPhysicsUpdate()
 	{
-		for (auto &EntityId : AffectedEntities) // Check through all entities in 
+		if (ForceUpdated) return;
+
+		for (auto &Channel : AffectedEntityChannels) // Check through all entities in 
 		{
+			if (Channel == nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
+				continue;
+
 			if (!GravityEnabled || GravitationalAcceleration == AZ::Vector3(0, 0, 0))
-				CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
+				Channel->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
 
 			else
 			{
 				Force GravForce;
+				AZ::EntityId entityId;
+				Channel->GetComponentEntityId(entityId);
 				GravForce.tag = ForceTag;
 				pe_status_dynamics physicsStatus;
-				LmbrCentral::CryPhysicsComponentRequestBus::Event(GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+				LmbrCentral::CryPhysicsComponentRequestBus::Event(entityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 				GravForce.strengthVector = physicsStatus.mass * GravitationalAcceleration;
-				CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, GravForce);
+				Channel->AddForce(ForceName, GravForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
 			}
 
 		}
-
+		ForceUpdated = true;
 	}
 }

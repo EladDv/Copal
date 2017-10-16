@@ -60,13 +60,23 @@ namespace Copal
 
 	void SimpleSpringForceComponent::OnPostPhysicsUpdate()
 	{
+
+		if (AttachedEntity.IsValid() && AttachedHandler == nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
+			AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(AttachedEntity);
+		if (!ForceEnabled)
+		{
+			if (AttachedHandler != nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
+				AttachedHandler->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+			return;
+		}
+
 		AZ::Vector3 AttachedEntityLocation = AZ::Vector3(0, 0, 0); // Necessary for GetWorldTM to return a meaninful and correct Transform
 		AZ::Vector3 CurrentEntityLocation = AZ::Vector3(0, 0, 0); // Necessary for GetWorldTM to return a meaninful and correct Transform
 		AZ::TransformBus::EventResult(AttachedEntityLocation, AttachedEntity, &AZ::TransformBus::Events::GetWorldTranslation);
 		AZ::TransformBus::EventResult(CurrentEntityLocation, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
 		pe_status_dynamics physicsStatus;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(GetAttachedEntity(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+		LmbrCentral::CryPhysicsComponentRequestBus::Event(AttachedEntity, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 
 		AZ::Vector3 RestPosition = (AttachedEntityLocation - CurrentEntityLocation).GetNormalizedExact() * RestLength; // Get position where the spring ends while at rest relative to the start.
 		RestPosition += CurrentEntityLocation; // add that to the actual location, get the world coordinates of the end of the resting spring
@@ -76,7 +86,9 @@ namespace Copal
 		SpringForce.strengthVector = ForceToApply;
 		SpringForce.tag = ForceTag;
 
-		CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, SpringForce);
+		if (AttachedHandler != nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
+			AttachedHandler->AddForce(ForceName, SpringForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+		
 	}
 
 }

@@ -53,8 +53,8 @@ namespace Copal
 					->Method("DeactivateDrag", &EMAggregatorComponent::DeactivateDrag)
 					->Method("AddTagToHandled", &EMAggregatorComponent::AddTagToHandled)
 					->Method("RemoveTagFromHandled", &EMAggregatorComponent::RemoveTagFromHandled)
-					->Method("UseDensity", &EMAggregatorComponent::UseDensity)
-					->Method("UseCharge", &EMAggregatorComponent::UseCharge)
+					->Method("UseDensity", &EMAggregatorComponent::SetDensity)
+					->Method("UseCharge", &EMAggregatorComponent::SetCharge)
 					->Property("HandledTags", BehaviorValueProperty(&EMAggregatorComponent::HandledTags))
 					->Property("Charge", BehaviorValueGetter(&EMAggregatorComponent::Charge), nullptr) // No setting manually to avoid it not matching!
 					->Property("ChargeDensity", BehaviorValueGetter(&EMAggregatorComponent::ChargeDensity), nullptr) // No setting manually to avoid it not matching!
@@ -62,7 +62,7 @@ namespace Copal
 			}
 		}
 	}
-	void EMAggregatorComponent::UseDensity(float density)
+	void EMAggregatorComponent::SetDensity(float density)
 	{
 		pe_status_dynamics physicsStatus;
 		LmbrCentral::CryPhysicsComponentRequestBus::Event(GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
@@ -70,7 +70,7 @@ namespace Copal
 		ChargeDensity = density;
 		Charge = density * physicsStatus.mass;
 	}
-	void EMAggregatorComponent::UseCharge(float charge)
+	void EMAggregatorComponent::SetCharge(float charge)
 	{
 		pe_status_dynamics physicsStatus;
 		LmbrCentral::CryPhysicsComponentRequestBus::Event(GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);

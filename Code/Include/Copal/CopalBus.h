@@ -99,6 +99,9 @@ namespace Copal
 		* \param outParam - a pointer to a CopalForceMap, will be assigned the toqrues map
 		*/
 		virtual void GetAllTorques(CopalForceMap*) {}
+
+		virtual void GetComponentEntityId(AZ::EntityId){}
+
     };
     using CopalPhysicsRequestsBus = AZ::EBus<CopalPhysicsRequests>;
 } // namespace Copal

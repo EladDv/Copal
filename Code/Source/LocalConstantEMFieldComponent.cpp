@@ -13,7 +13,6 @@ namespace Copal
 				->Version(2)
 				->Field("ForceName", &LocalConstantEMFieldComponent::ForceName)
 				->Field("ForceTag", &LocalConstantEMFieldComponent::ForceTag)
-				->Field("AffectedEntities", &LocalConstantEMFieldComponent::AffectedEntities)
 				->Field("ElectricForceEnabled", &LocalConstantEMFieldComponent::ElectricForceEnabled)
 				->Field("ElectricFieldVector", &LocalConstantEMFieldComponent::ElectricFieldVector)
 				->Field("MagneticForceEnabled", &LocalConstantEMFieldComponent::MagneticForceEnabled)
@@ -74,46 +73,58 @@ namespace Copal
 
 	void LocalConstantEMFieldComponent::OnTriggerAreaEntered(AZ::EntityId e)
 	{
-		AffectedEntities.push_back(e);
+		AZ::Entity* CurrentEntity = nullptr;
+		AZ::ComponentApplicationBus::BroadcastResult(CurrentEntity, &AZ::ComponentApplicationRequests::FindEntity, e);
+		Copal::EMAggregatorComponent *EntityEMAggregator = CurrentEntity->FindComponent<Copal::EMAggregatorComponent>();
+		if (EntityEMAggregator == nullptr) // Check for the EM aggregator - if dosnt exist no reason to affect it
+			return;
+
+		auto EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
+		if (EntityBusChannel != nullptr) // Always check the channel to not be null!
+			AffectedEntityChannels.push_back(EntityBusChannel);
 	}
 
 	void LocalConstantEMFieldComponent::OnTriggerAreaExited(AZ::EntityId e)
 	{
-		AZStd::vector<AZ::EntityId>::iterator position = AZStd::find(AffectedEntities.begin(), AffectedEntities.end(), e);
-		if (position != AffectedEntities.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
-			AffectedEntities.erase(position);
-		CopalPhysicsRequestsBus::Event(e, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
-
+		Copal::CopalPhysicsRequests* EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
+		AZStd::vector<Copal::CopalPhysicsRequests*>::iterator position = AZStd::find(AffectedEntityChannels.begin(),AffectedEntityChannels.end(), EntityBusChannel);
+		if (position != AffectedEntityChannels.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
+			AffectedEntityChannels.erase(position);
+		if (EntityBusChannel != nullptr) // Remember to remove the force! and always check the channel to not be null!
+			EntityBusChannel->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
 	}
 
 	void LocalConstantEMFieldComponent::OnPostPhysicsUpdate()
 	{
 		Force EMForce;
-		for (auto &EntityId : AffectedEntities) // Check through all entities in 
+		for (auto &Channel : AffectedEntityChannels) // Check through all entities in 
 		{
-			AZ::Entity* CurrentEntity = nullptr;
-			AZ::ComponentApplicationBus::BroadcastResult(CurrentEntity, &AZ::ComponentApplicationRequests::FindEntity, EntityId);
-			Copal::EMAggregatorComponent *EntityEMAggregator = CurrentEntity->FindComponent<Copal::EMAggregatorComponent>();
-			if (EntityEMAggregator != nullptr)
+			AZ::EntityId EntityId;
+			if (Channel == nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
+				continue;
+
+			Channel->GetComponentEntityId(EntityId);
+			if (!MagneticForceEnabled && !ElectricForceEnabled)
+				Channel->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+			else
 			{
-				if (!MagneticForceEnabled && !ElectricForceEnabled)
-					CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
+				EMForce.tag = ForceTag;
+				AZ::Entity* CurrentEntity = nullptr;
+				AZ::ComponentApplicationBus::BroadcastResult(CurrentEntity, &AZ::ComponentApplicationRequests::FindEntity, EntityId);
+				Copal::EMAggregatorComponent *EntityEMAggregator = CurrentEntity->FindComponent<Copal::EMAggregatorComponent>();
 
-				else
+				if (ElectricForceEnabled && ElectricFieldVector != AZ::Vector3(0, 0, 0))
+					EMForce.strengthVector += EntityEMAggregator->GetCharge()*ElectricFieldVector;
+
+				if (MagneticForceEnabled && MagneticFieldVector != AZ::Vector3(0, 0, 0))
 				{
-					EMForce.tag = ForceTag;
-					if (ElectricForceEnabled && ElectricFieldVector != AZ::Vector3(0, 0, 0))
-						EMForce.strengthVector += EntityEMAggregator->GetCharge()*ElectricFieldVector;
-
-					if (MagneticForceEnabled && MagneticFieldVector != AZ::Vector3(0, 0, 0))
-					{
-						pe_status_dynamics physicsStatus;
-						LmbrCentral::CryPhysicsComponentRequestBus::Event(GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
-						EMForce.strengthVector += EntityEMAggregator->GetCharge()*(LYVec3ToAZVec3(physicsStatus.v).Cross(MagneticFieldVector));
-					}
-					CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, EMForce);
+					pe_status_dynamics physicsStatus;
+					LmbrCentral::CryPhysicsComponentRequestBus::Event(EntityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+					EMForce.strengthVector += EntityEMAggregator->GetCharge()*(LYVec3ToAZVec3(physicsStatus.v).Cross(MagneticFieldVector));
 				}
+				Channel->AddForce(ForceName, EMForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
 			}
+			
 		}
 	}
 
