@@ -39,6 +39,8 @@
             "Source/InertialFrameComponent.cpp",
             "Source/InertialFrameComponent.h",
 
+            "Source/GlobalRadialGravityComponent.cpp",
+            "Source/GlobalRadialGravityComponent.h",
 
             "Source/CopalSystemComponent.cpp",
             "Source/CopalSystemComponent.h"

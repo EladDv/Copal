@@ -13,31 +13,32 @@ namespace Copal
 				->Version(2)
 				->Field("ForceName", &LocalConstantEMFieldComponent::ForceName)
 				->Field("ForceTag", &LocalConstantEMFieldComponent::ForceTag)
-				->Field("ElectricForceEnabled", &LocalConstantEMFieldComponent::ElectricForceEnabled)
-				->Field("ElectricFieldVector", &LocalConstantEMFieldComponent::ElectricFieldVector)
-				->Field("MagneticForceEnabled", &LocalConstantEMFieldComponent::MagneticForceEnabled)
-				->Field("MagneticFieldVector", &LocalConstantEMFieldComponent::MagneticFieldVector)
+				->Field("EFEnabled", &LocalConstantEMFieldComponent::EFEnabled)
+				->Field("EFVector", &LocalConstantEMFieldComponent::EFVector)
+				->Field("MFEnabled", &LocalConstantEMFieldComponent::MFEnabled)
+				->Field("MFVector", &LocalConstantEMFieldComponent::MFVector)
 				;
 			AZ::EditContext* editContext = serializeContext->GetEditContext();
 			if (editContext)
 			{
-				editContext->Class<LocalConstantEMFieldComponent>("Local Constant EM Field Component", "Adds a constant EM field (and applies Lorenz forces) inside the trigger areas of the entity")
+				editContext->Class<LocalConstantEMFieldComponent>("Constant EM Field Component", "Adds a simple constant force in specified vector")
 					->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-						->Attribute(AZ::Edit::Attributes::Category, "Copal Physics")
-						->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/SequenceAgent.png")
-						->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/SequenceAgent.png")
-						->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game", 0x232b318c))
-						->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+					->Attribute(AZ::Edit::Attributes::Category, "Copal Physics")
+					->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/SequenceAgent.png")
+					->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/SequenceAgent.png")
+					->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game", 0x232b318c))
+					->Attribute(AZ::Edit::Attributes::AutoExpand, true)
 
 					->DataElement(AZ::Edit::UIHandlers::LineEdit, &LocalConstantEMFieldComponent::ForceName, "Force Name", "Unique name of the force to be used.") //This is important, needs to be unique
 					->DataElement(AZ::Edit::UIHandlers::LineEdit, &LocalConstantEMFieldComponent::ForceTag, "Force Tag", "Type of force to be applied, only applied to entities who are able to handle those types.") //This is important, needs to be unique
-					->DataElement(AZ::Edit::UIHandlers::CheckBox, &LocalConstantEMFieldComponent::ElectricForceEnabled, "Electric Force Enabled", "Is the force applied.")
-					->DataElement(AZ::Edit::UIHandlers::Vector3, &LocalConstantEMFieldComponent::ElectricFieldVector, "Electric Field Vector", "The Force Vector applied to the entity.")
-					->Attribute(AZ::Edit::Attributes::Visibility, &LocalConstantEMFieldComponent::ElectricForceEnabled)
-					->DataElement(AZ::Edit::UIHandlers::CheckBox, &LocalConstantEMFieldComponent::MagneticForceEnabled, "Magnetic Force Enabled", "Is the Magnetic force applied.")
-					->DataElement(AZ::Edit::UIHandlers::Vector3, &LocalConstantEMFieldComponent::MagneticFieldVector, "Magnetic Field Vector", "The Magnetic Field Vector applied in the area.")
-					->Attribute(AZ::Edit::Attributes::Visibility, &LocalConstantEMFieldComponent::MagneticForceEnabled)
-
+					->DataElement(AZ::Edit::UIHandlers::CheckBox, &LocalConstantEMFieldComponent::EFEnabled, "Electric Force Enabled", "Is the force applied.")
+					->DataElement(AZ::Edit::UIHandlers::Vector3, &LocalConstantEMFieldComponent::EFVector, "Electric Field Vector", "The Force Vector applied to the entity.")
+					->Attribute(AZ::Edit::Attributes::Visibility, &LocalConstantEMFieldComponent::EFEnabled)
+					->Attribute(AZ::Edit::Attributes::ChangeNotify, &LocalConstantEMFieldComponent::Print)
+					->DataElement(AZ::Edit::UIHandlers::CheckBox, &LocalConstantEMFieldComponent::MFEnabled, "Magnetic Force Enabled", "Is the force applied.")
+					->DataElement(AZ::Edit::UIHandlers::Vector3, &LocalConstantEMFieldComponent::MFVector, "Magnetic Field Vector", "The Force Vector applied to the entity.")
+					->Attribute(AZ::Edit::Attributes::Visibility, &LocalConstantEMFieldComponent::MFEnabled)
+					->Attribute(AZ::Edit::Attributes::ChangeNotify, &LocalConstantEMFieldComponent::Print)
 					;
 			}
 
@@ -46,14 +47,10 @@ namespace Copal
 			if (behaviorContext)
 			{
 				behaviorContext->Class<LocalConstantEMFieldComponent>()
-					->Method("GetForceName", &ForceBaseComponent::GetForceName)
-					->Method("SetForceName", &ForceBaseComponent::SetForceName)
-					->Method("GetForceTag", &ForceBaseComponent::GetForceTag)
-					->Method("SetForceTag", &ForceBaseComponent::SetForceTag)
-					->Property("ElectricForceEnabled", BehaviorValueProperty(&LocalConstantEMFieldComponent::ElectricForceEnabled))
-					->Property("ElectricFieldVector", BehaviorValueProperty(&LocalConstantEMFieldComponent::ElectricFieldVector))
-					->Property("MagneticForceEnabled", BehaviorValueProperty(&LocalConstantEMFieldComponent::MagneticForceEnabled))
-					->Property("MagneticFieldVector", BehaviorValueProperty(&LocalConstantEMFieldComponent::MagneticFieldVector))
+					->Method("GetForceName", &LocalConstantEMFieldComponent::GetForceName)
+					->Method("SetForceName", &LocalConstantEMFieldComponent::SetForceName)
+					->Method("GetForceTag", &LocalConstantEMFieldComponent::GetForceTag)
+					->Method("SetForceTag", &LocalConstantEMFieldComponent::SetForceTag)
 					;
 			}
 		}
@@ -61,10 +58,20 @@ namespace Copal
 
 	void LocalConstantEMFieldComponent::Activate()
 	{
-		__super::Activate();
 		LmbrCentral::TriggerAreaNotificationBus::Handler::BusConnect(GetEntityId());
+		Print();
+		Copal::ForceBaseComponent::Activate();
 	}
 
+	void LocalConstantEMFieldComponent::Print()
+	{
+		CryLogAlways("E Vector: %f %f %f %s", float(EFVector.GetX()), float(EFVector.GetY()), float(EFVector.GetZ()), ForceName);
+		CryLogAlways("M Vector: %f %f %f %s", float(MFVector.GetX()), float(MFVector.GetY()), float(MFVector.GetZ()), ForceName);
+	}
+	void LocalConstantEMFieldComponent::PrintV(AZ::Vector3 v)
+	{
+		CryLogAlways("Vector: %f %f %f", float(v.GetX()), float(v.GetY()), float(v.GetZ()) );
+	}
 	void LocalConstantEMFieldComponent::Deactivate()
 	{
 		LmbrCentral::TriggerAreaNotificationBus::Handler::BusDisconnect(GetEntityId());
@@ -75,54 +82,57 @@ namespace Copal
 	{
 		AZ::Entity* CurrentEntity = nullptr;
 		AZ::ComponentApplicationBus::BroadcastResult(CurrentEntity, &AZ::ComponentApplicationRequests::FindEntity, e);
-		Copal::EMAggregatorComponent *EntityEMAggregator = CurrentEntity->FindComponent<Copal::EMAggregatorComponent>();
-		if (EntityEMAggregator == nullptr) // Check for the EM aggregator - if dosnt exist no reason to affect it
-			return;
 
-		auto EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
-		if (EntityBusChannel != nullptr) // Always check the channel to not be null!
-			AffectedEntityChannels.push_back(EntityBusChannel);
+		if (!CurrentEntity)
+			return;
+		Copal::EMAggregatorComponent* EMAggregator = CurrentEntity->FindComponent <Copal::EMAggregatorComponent>();
+		if (EMAggregator)
+			AffectedEntities.push_back(e);
+
 	}
 
 	void LocalConstantEMFieldComponent::OnTriggerAreaExited(AZ::EntityId e)
 	{
-		Copal::CopalPhysicsRequests* EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
-		AZStd::vector<Copal::CopalPhysicsRequests*>::iterator position = AZStd::find(AffectedEntityChannels.begin(),AffectedEntityChannels.end(), EntityBusChannel);
-		if (position != AffectedEntityChannels.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
-			AffectedEntityChannels.erase(position);
-		if (EntityBusChannel != nullptr) // Remember to remove the force! and always check the channel to not be null!
-			EntityBusChannel->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+		AZStd::vector<AZ::EntityId>::iterator position = AZStd::find(AffectedEntities.begin(), AffectedEntities.end(), e);
+		if (position != AffectedEntities.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
+			AffectedEntities.erase(position);
+		
+		CopalPhysicsRequestsBus::Event(e, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
 	}
 
 	void LocalConstantEMFieldComponent::OnPostPhysicsUpdate()
 	{
 		Force EMForce;
-		for (auto &Channel : AffectedEntityChannels) // Check through all entities in 
+		for (auto &EntityId : AffectedEntities) // Check through all entities in 
 		{
-			AZ::EntityId EntityId;
-			if (Channel == nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
-				continue;
 
-			Channel->GetComponentEntityId(EntityId);
-			if (!MagneticForceEnabled && !ElectricForceEnabled)
-				Channel->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+			if (!MFEnabled && !EFEnabled)
+				CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
 			else
 			{
 				EMForce.tag = ForceTag;
 				AZ::Entity* CurrentEntity = nullptr;
-				AZ::ComponentApplicationBus::BroadcastResult(CurrentEntity, &AZ::ComponentApplicationRequests::FindEntity, EntityId);
-				Copal::EMAggregatorComponent *EntityEMAggregator = CurrentEntity->FindComponent<Copal::EMAggregatorComponent>();
+				EBUS_EVENT_RESULT(CurrentEntity, AZ::ComponentApplicationBus, FindEntity, EntityId);
+				
+				Copal::EMAggregatorComponent* EntityEMAggregator = CurrentEntity->FindComponent <Copal::EMAggregatorComponent>();
+				if (!EntityEMAggregator)
+					continue;
 
-				if (ElectricForceEnabled && ElectricFieldVector != AZ::Vector3(0, 0, 0))
-					EMForce.strengthVector += EntityEMAggregator->GetCharge()*ElectricFieldVector;
+				AZ::Vector3 tempV = AZ::Vector3(EntityEMAggregator->GetCharge(), EntityEMAggregator->GetCharge(), EntityEMAggregator->GetCharge());
 
-				if (MagneticForceEnabled && MagneticFieldVector != AZ::Vector3(0, 0, 0))
+				if (EFEnabled)
+				{
+					EMForce.strengthVector = EMForce.strengthVector + (EFVector * tempV);
+				}
+				if (MFEnabled)
 				{
 					pe_status_dynamics physicsStatus;
 					LmbrCentral::CryPhysicsComponentRequestBus::Event(EntityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
-					EMForce.strengthVector += EntityEMAggregator->GetCharge()*(LYVec3ToAZVec3(physicsStatus.v).Cross(MagneticFieldVector));
+
+					EMForce.strengthVector = EMForce.strengthVector + ((LYVec3ToAZVec3(physicsStatus.v).Cross(MFVector))*tempV);
 				}
-				Channel->AddForce(ForceName, EMForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+				//PrintV(EMForce.strengthVector);
+				CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::AddForce, ForceName,EMForce);
 			}
 			
 		}

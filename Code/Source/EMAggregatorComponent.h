@@ -14,13 +14,13 @@ namespace Copal
 
 		// Required Reflect function.
 		static void Reflect(AZ::ReflectContext* context);
-
+		void Activate() override;
 		void SetDensity(float density);
 		void SetCharge(float charge);
 
 		float GetDensity() { return ChargeDensity; }
 		float GetCharge() { return Charge; }
-
+		
 	protected:
 		CopalForceMap ForcesMap;
 		CopalForceMap TorquesMap;
@@ -28,6 +28,9 @@ namespace Copal
 		float Charge = 0;
 		float ChargeDensity = 0;
 
-		AZStd::list < AZStd::string > HandledTags = AZStd::list<AZStd::string>(1, "Electromagnetic");
+		bool UseDensity = false;
+		bool UseCharge = true;
+
+		//AZStd::vector < AZStd::string > HandledTags = AZStd::vector<AZStd::string>(1, "Electromagnetic");
 	};
 }

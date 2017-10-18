@@ -12,9 +12,11 @@ namespace Copal
 				->Version(1)
 				->Field("Forces Map", &EMAggregatorComponent::ForcesMap)
 				->Field("Torques Map", &EMAggregatorComponent::TorquesMap)
-				->Field("Handled Tags", &EMAggregatorComponent::HandledTags)
+				->FieldFromBase<EMAggregatorComponent, AggregatorBaseComponent>("Handled Tags", &EMAggregatorComponent::HandledTags)
 				->Field("Charge", &EMAggregatorComponent::Charge)
 				->Field("Charge Density", &EMAggregatorComponent::ChargeDensity)
+				->Field("Use Density", &EMAggregatorComponent::UseDensity)
+				->Field("Use Charge", &EMAggregatorComponent::UseCharge)
 				;
 
 			AZ::EditContext* editContext = serializeContext->GetEditContext();
@@ -27,7 +29,14 @@ namespace Copal
 					->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/TriggerArea.png")
 					->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game", 0x232b318c))
 					->Attribute(AZ::Edit::Attributes::AutoExpand, true)
-					->DataElement(0, &EMAggregatorComponent::HandledTags, "Handled Force Tags", "List of tags handled by this aggregator")
+					->DataElement(AZ::Edit::UIHandlers::Default, &EMAggregatorComponent::HandledTags, "Handled Force Tags", "List of tags handled by this aggregator")
+					->DataElement(AZ::Edit::UIHandlers::CheckBox, &EMAggregatorComponent::UseDensity, "Use Density", "")
+					->DataElement(AZ::Edit::UIHandlers::CheckBox, &EMAggregatorComponent::UseCharge, "Use Charge", "")
+					->DataElement(0, &EMAggregatorComponent::Charge, "Charge", "")
+					->Attribute(AZ::Edit::Attributes::Visibility, &EMAggregatorComponent::UseCharge)
+					->DataElement(0, &EMAggregatorComponent::ChargeDensity, "Charge Density", "")
+					->Attribute(AZ::Edit::Attributes::Visibility, &EMAggregatorComponent::UseDensity)
+
 					;
 			}
 			AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(reflection);
@@ -62,6 +71,16 @@ namespace Copal
 			}
 		}
 	}
+
+	void EMAggregatorComponent::Activate()
+	{
+		if (UseDensity)
+			SetDensity(ChargeDensity);
+		if (UseCharge)
+			SetCharge(Charge);
+		__super::Activate();
+	}
+
 	void EMAggregatorComponent::SetDensity(float density)
 	{
 		pe_status_dynamics physicsStatus;

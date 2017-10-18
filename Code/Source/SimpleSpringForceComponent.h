@@ -23,18 +23,13 @@ namespace Copal
 		float GetRestLength() { return RestLength; }
 		void SetRestLength(float l) { RestLength = l; }
 		AZ::EntityId GetAttachedEntity() { return AttachedEntity; }
-		void SetAttachedEntity(AZ::EntityId e) 
-		{
-			AttachedEntity = e;
-			AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
-		}
+
 
 	protected:
 		AZStd::string ForceName;
 		AZStd::string ForceTag;
 
 		AZ::EntityId AttachedEntity;
-		Copal::CopalPhysicsRequests* AttachedHandler;
 
 		bool ForceEnabled = false;
 		float K = 0;

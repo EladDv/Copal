@@ -57,13 +57,9 @@ namespace Copal
 	void HarmonicOscillatorComponent::OnPostPhysicsUpdate()
 	{
 
-		if (AttachedEntity.IsValid() && AttachedHandler == nullptr) // This will make sure you send the force on the first go (if the entity is valid) 
-			AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(AttachedEntity);
-
 		if (!ForceEnabled)
 		{
-			if (AttachedHandler != nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
-				AttachedHandler->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+			CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
 			return;
 		}
 
@@ -82,8 +78,7 @@ namespace Copal
 		OscillatorForce.strengthVector = ForceToApply;
 		OscillatorForce.tag = ForceTag;
 
-		if (AttachedHandler != nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
-			AttachedHandler->AddForce(ForceName, OscillatorForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+		CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, OscillatorForce);
 
 	}
 

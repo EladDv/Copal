@@ -100,7 +100,7 @@ namespace Copal
 		*/
 		virtual void GetAllTorques(CopalForceMap*) {}
 
-		virtual void GetComponentEntityId(AZ::EntityId){}
+		virtual AZ::EntityId GetComponentEntityId() = 0;
 
     };
     using CopalPhysicsRequestsBus = AZ::EBus<CopalPhysicsRequests>;

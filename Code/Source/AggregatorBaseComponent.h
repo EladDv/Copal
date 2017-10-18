@@ -60,18 +60,20 @@ namespace Copal
 			Force* GetTorqe(const AZStd::string) override;
 			void GetAllTorques(CopalForceMap* outParam) override { outParam = &TorquesMap; }
 
-			void GetComponentEntityId(AZ::EntityId id) override { id = GetEntityId(); }
-
-			AZStd::list < AZStd::string >* GetHandledTags() { return &HandledTags; }
-			void GetHandledTags(AZStd::list < AZStd::string >* TagList) { HandledTags = *TagList; }
+			AZ::EntityId GetComponentEntityId() override { return GetEntityId(); }
+			void PrintTags();
+			AZStd::vector < AZStd::string >* GetHandledTags() { return &HandledTags; }
+			void GetHandledTags(AZStd::vector < AZStd::string >* TagList) { HandledTags = *TagList; }
 
 			void AddTagToHandled(AZStd::string tag) { HandledTags.push_back(tag); }
-			void RemoveTagFromHandled(AZStd::string tag) { HandledTags.remove(tag); }
+			void RemoveTagFromHandled(AZStd::string tag) { HandledTags.erase(&tag); }
+
+			AZStd::vector < AZStd::string > HandledTags;
+
 		protected:
 			CopalForceMap ForcesMap;
 			CopalForceMap TorquesMap;
 
-			AZStd::list < AZStd::string > HandledTags;
 
 			float lastTime = 0.f;
 			float currentTime = 0.f;

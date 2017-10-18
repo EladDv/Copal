@@ -39,7 +39,7 @@ namespace Copal
 		AZStd::string ForceName;
 		AZStd::string ForceTag;
 
-		AZStd::vector<Copal::CopalPhysicsRequests*> AffectedEntityChannels;
+		AZStd::vector<AZ::EntityId> AffectedEntities;
 
 		bool GravityEnabled = false;
 		bool ForceUpdated = false; // Save CPU cycles on already updated forces

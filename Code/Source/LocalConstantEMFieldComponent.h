@@ -24,33 +24,36 @@ namespace Copal
 		void Deactivate() override;
 
 		void OnPostPhysicsUpdate() override;
+		
+		void Print();
+		void PrintV(AZ::Vector3);
 
 		void OnTriggerAreaEntered(AZ::EntityId) override;
 		void OnTriggerAreaExited(AZ::EntityId) override;
 
-		bool GetElectricForceEnabled() { return ElectricForceEnabled; }
-		void SetElectricForceEnabled(bool enabled) { ElectricForceEnabled = enabled; }
+		bool GetElectricForceEnabled() { return EFEnabled; }
+		void SetElectricForceEnabled(bool enabled) { EFEnabled = enabled; }
 
-		bool GetMagneticForceEnabled() { return MagneticForceEnabled; }
-		void SetMagneticForceEnabled(bool enabled) { MagneticForceEnabled = enabled; }
+		bool GetMagneticForceEnabled() { return MFEnabled; }
+		void SetMagneticForceEnabled(bool enabled) { MFEnabled = enabled; }
 
-		AZ::Vector3 GetElectricFieldVector() { return ElectricFieldVector; }
-		void SetElectricFieldVector(AZ::Vector3 fieldVector) { ElectricFieldVector = fieldVector; }
+		AZ::Vector3 GetElectricFieldVector() { return EFVector; }
+		void SetElectricFieldVector(AZ::Vector3 fieldVector) { EFVector = fieldVector; }
 
-		AZ::Vector3 GetMagneticFieldVector() { return MagneticFieldVector; }
-		void SetMagneticFieldVector(AZ::Vector3 fieldVector) { MagneticFieldVector = fieldVector; }
+		AZ::Vector3 GetMagneticFieldVector() { return MFVector; }
+		void SetMagneticFieldVector(AZ::Vector3 fieldVector) { MFVector = fieldVector; }
 
 	protected:
 		AZStd::string ForceName;
 		AZStd::string ForceTag = "Electromagnetic";
 
-		AZStd::vector<Copal::CopalPhysicsRequests*> AffectedEntityChannels;
+		AZStd::vector<AZ::EntityId> AffectedEntities;
 
-		bool ElectricForceEnabled = false;
-		bool MagneticForceEnabled = false;
+		bool EFEnabled = false;
+		bool MFEnabled = false;
 
-		AZ::Vector3 ElectricFieldVector = AZ::Vector3(0, 0, 0);
-		AZ::Vector3 MagneticFieldVector = AZ::Vector3(0, 0, 0);
+		AZ::Vector3 EFVector = AZ::Vector3(10,10,-10);
+		AZ::Vector3 MFVector = AZ::Vector3(3, 7, -15);
 
 	};
 }

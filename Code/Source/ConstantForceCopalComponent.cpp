@@ -58,21 +58,15 @@ namespace Copal
 	void ConstantForceComponent::OnPostPhysicsUpdate()
 	{
 		if (ForceUpdated) return;
-
-		if (AttachedEntity.IsValid() && AttachedHandler == nullptr)
-			AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(AttachedEntity);
-
-		if (AttachedHandler != nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
+		if (!ForceEnabled)
 		{
-			if (ForceEnabled)
-			{
-				Force constForce;
-				constForce.strengthVector = ForceVector;
-				AttachedHandler->AddForce(ForceName, constForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
-			}
-			else
-				AttachedHandler->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+			CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
+			ForceUpdated = true;
+			return;
 		}
+		Force constForce;
+		constForce.strengthVector = ForceVector;
+		CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, constForce);
 		ForceUpdated = true;
 	}
 

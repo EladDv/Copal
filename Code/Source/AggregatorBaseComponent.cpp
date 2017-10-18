@@ -25,7 +25,8 @@ namespace Copal
 						->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/TriggerArea.png")
 						->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game", 0x232b318c))
 						->Attribute(AZ::Edit::Attributes::AutoExpand, true)
-					->DataElement(0, &AggregatorBaseComponent::HandledTags, "Handled Force Tags", "List of tags handled by this aggregator")
+					->DataElement(AZ::Edit::UIHandlers::Default, &AggregatorBaseComponent::HandledTags, "Handled Force Tags", "List of tags handled by this aggregator")
+					//->Attribute(AZ::Edit::Attributes::AddNotify, &AggregatorBaseComponent::PrintTags)
 					;
 			}
 			AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(reflection);
@@ -56,6 +57,14 @@ namespace Copal
 			}
 		}
 	}
+	void AggregatorBaseComponent::PrintTags()
+	{
+		for each (auto tag in HandledTags)
+		{
+			CryLogAlways("%s",tag);
+		}
+	}
+
 	void AggregatorBaseComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType & provided)
 	{
 		provided.push_back(AZ_CRC("ForceAggregatorService"));
@@ -179,15 +188,19 @@ namespace Copal
 	*/
 	void AggregatorBaseComponent::AddForce(const AZStd::string name, const Force& force)
 	{
-		AZStd::list<AZStd::string>::iterator found = AZStd::find(HandledTags.begin(), HandledTags.end(), force.tag); // Search for force tag if has one.
-		if (found != HandledTags.end() || force.tag == "")
-		{
-			if (!force.isOffCenter)
+		for each (auto tag in HandledTags)
+		{	// Search for force tag if has one.
+			if (force.tag == tag || force.tag == "")
 			{
-				if (ForcesMap.count(name) != 0) ForceSum -= ForcesMap.at(name).strengthVector;
-				ForceSum += force.strengthVector;
+				if (!force.isOffCenter)
+				{
+					if (ForcesMap.count(name) != 0) ForceSum -= ForcesMap.at(name).strengthVector;
+					ForceSum += force.strengthVector;
+				}
+				ForcesMap[name] = force;
+				//CryLogAlways("Added Force %s", name);
+				return;
 			}
-			ForcesMap[name] = force;
 		}
 	}
 
@@ -229,15 +242,17 @@ namespace Copal
 	*/
 	void AggregatorBaseComponent::AddTorque(const AZStd::string name, const Force& torque)
 	{
-		AZStd::list<AZStd::string>::iterator found = AZStd::find(HandledTags.begin(), HandledTags.end(), torque.tag); // Search for force tag if has one.
-		if (found != HandledTags.end() || torque.tag == "")
-		{
-			if (!torque.isOffCenter)
+		for each (auto tag in HandledTags)
+		{	// Search for force tag if has one.
+			if (torque.tag == tag || torque.tag == "")
 			{
-				if (TorquesMap.count(name) != 0) TorqueSum -= TorquesMap.at(name).strengthVector;
-				TorqueSum += torque.strengthVector;
+				if (!torque.isOffCenter)
+				{
+					if (TorquesMap.count(name) != 0) TorqueSum -= TorquesMap.at(name).strengthVector;
+					TorqueSum += torque.strengthVector;
+				}
+				TorquesMap[name] = torque;
 			}
-			TorquesMap[name] = torque;
 		}
 	}
 

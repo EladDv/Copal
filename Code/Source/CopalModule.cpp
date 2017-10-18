@@ -14,6 +14,7 @@
 #include "HarmonicOscillatorComponent.h"
 #include "EMAggregatorComponent.h"
 #include "InertialFrameComponent.h"
+#include "GlobalRadialGravityComponent.h"
 
 #include <IGem.h>
 
@@ -32,13 +33,14 @@ namespace Copal
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
 			m_descriptors.insert(m_descriptors.end(), {
 				CopalSystemComponent::CreateDescriptor(),
-				ConstantForceComponent::CreateDescriptor(),
-				AggregatorBaseComponent::CreateDescriptor(),
-				SimpleSpringForceComponent::CreateDescriptor(),
-				LocalGravityComponent::CreateDescriptor(),
-				LocalConstantEMFieldComponent::CreateDescriptor(),
 				EMAggregatorComponent::CreateDescriptor(),
+				AggregatorBaseComponent::CreateDescriptor(),
+				ConstantForceComponent::CreateDescriptor(),
+				SimpleSpringForceComponent::CreateDescriptor(),
+				LocalConstantEMFieldComponent::CreateDescriptor(),
+				LocalGravityComponent::CreateDescriptor(),
 				HarmonicOscillatorComponent::CreateDescriptor(),
+				GlobalRadialGravityComponent::CreateDescriptor(),
 				InertialFrameComponent::CreateDescriptor()
 			});
         }

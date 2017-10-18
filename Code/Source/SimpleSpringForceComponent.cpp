@@ -61,12 +61,9 @@ namespace Copal
 	void SimpleSpringForceComponent::OnPostPhysicsUpdate()
 	{
 
-		if (AttachedEntity.IsValid() && AttachedHandler == nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
-			AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(AttachedEntity);
 		if (!ForceEnabled)
 		{
-			if (AttachedHandler != nullptr) // Always check for nullptr channels, even though unlikely it could crash your application!
-				AttachedHandler->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+			CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
 			return;
 		}
 
@@ -86,9 +83,8 @@ namespace Copal
 		SpringForce.strengthVector = ForceToApply;
 		SpringForce.tag = ForceTag;
 
-		if (AttachedHandler != nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
-			AttachedHandler->AddForce(ForceName, SpringForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
-		
+		CopalPhysicsRequestsBus::Event(AttachedEntity, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, SpringForce);
+
 	}
 
 }

@@ -65,21 +65,23 @@ namespace Copal
 
 	void LocalGravityComponent::OnTriggerAreaEntered(AZ::EntityId e)
 	{
-		auto EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
-		if (EntityBusChannel != nullptr)
-			AffectedEntityChannels.push_back(EntityBusChannel);
+
+		AZ::Entity* CurrentEntity = nullptr;
+		AZ::ComponentApplicationBus::BroadcastResult(CurrentEntity, &AZ::ComponentApplicationRequests::FindEntity, e);
+		if (!CurrentEntity)
+			return;
+		AffectedEntities.push_back(e);
+
 		ForceUpdated = false;
 	}
 
 	void LocalGravityComponent::OnTriggerAreaExited(AZ::EntityId e)
 	{
-		Copal::CopalPhysicsRequests* EntityBusChannel = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
-		AZStd::vector<Copal::CopalPhysicsRequests*>::iterator position = AZStd::find(AffectedEntityChannels.begin(), 
-																					 AffectedEntityChannels.end(), EntityBusChannel);
-		if (position != AffectedEntityChannels.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
-			AffectedEntityChannels.erase(position);
-		if(EntityBusChannel != nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
-			EntityBusChannel->RemoveForce(ForceName);
+		AZStd::vector<AZ::EntityId>::iterator position = AZStd::find(AffectedEntities.begin(), AffectedEntities.end(), e);
+		if (position != AffectedEntities.end()) // Just in case, It dosnt sound possible that an object will exit an area it hasnt entered.
+			AffectedEntities.erase(position);
+
+		CopalPhysicsRequestsBus::Event(e, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
 		ForceUpdated = false;
 	}
 
@@ -87,24 +89,20 @@ namespace Copal
 	{
 		if (ForceUpdated) return;
 
-		for (auto &Channel : AffectedEntityChannels) // Check through all entities in 
+		for (auto &EntityId : AffectedEntities) // Check through all entities in 
 		{
-			if (Channel == nullptr) // Always check for nullptr AttachedHandler, even though unlikely it could crash your application!
-				continue;
 
 			if (!GravityEnabled || GravitationalAcceleration == AZ::Vector3(0, 0, 0))
-				Channel->RemoveForce(ForceName); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+				CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::RemoveForce, ForceName);
 
 			else
 			{
 				Force GravForce;
-				AZ::EntityId entityId;
-				Channel->GetComponentEntityId(entityId);
 				GravForce.tag = ForceTag;
 				pe_status_dynamics physicsStatus;
-				LmbrCentral::CryPhysicsComponentRequestBus::Event(entityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
-				GravForce.strengthVector = physicsStatus.mass * GravitationalAcceleration;
-				Channel->AddForce(ForceName, GravForce); // Channels are pretty much pointers to the connected entity. They only expose bus methods
+				LmbrCentral::CryPhysicsComponentRequestBus::Event(EntityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+				GravForce.strengthVector = GravitationalAcceleration * AZ::Vector3(physicsStatus.mass, physicsStatus.mass, physicsStatus.mass);
+				CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, GravForce);
 			}
 
 		}

@@ -24,7 +24,6 @@ namespace Copal
 			void SetAttachedEntity(AZ::EntityId e)
 			{
 				AttachedEntity = e;
-				AttachedHandler = Copal::CopalPhysicsRequestsBus::FindFirstHandler(e);
 				ForceUpdated = false;
 			}
 
@@ -34,11 +33,10 @@ namespace Copal
 			AZStd::string ForceTag;
 
 			AZ::EntityId AttachedEntity;
-			Copal::CopalPhysicsRequests* AttachedHandler;
 
 			bool ForceEnabled = false;
 			bool ForceUpdated = false; // Save CPU cycles on already updated forces
-			AZ::Vector3 ForceVector = AZ::Vector3(0, 0, 0);
+			AZ::Vector3 ForceVector;
 
 	};
 }

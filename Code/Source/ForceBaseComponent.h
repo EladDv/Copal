@@ -39,7 +39,7 @@ namespace Copal
 			static void Reflect(AZ::ReflectContext* context);
 			// Optional functions for defining provided and dependent services.
 			static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
-
+			
 			virtual void OnPostPhysicsUpdate() {}
 
 			const AZStd::string& GetForceName() const { return ForceName; }
