@@ -20,6 +20,8 @@ namespace Copal
 
 		float GetDensity() { return ChargeDensity; }
 		float GetCharge() { return Charge; }
+
+		void OnTempTagsChanged() { HandledTags = TempHandledTags; CryLogAlways("Changed Tags!"); }
 		
 	protected:
 		CopalForceMap ForcesMap;
@@ -30,6 +32,8 @@ namespace Copal
 
 		bool UseDensity = false;
 		bool UseCharge = true;
+
+		AZStd::vector < AZStd::string > TempHandledTags;
 
 		//AZStd::vector < AZStd::string > HandledTags = AZStd::vector<AZStd::string>(1, "Electromagnetic");
 	};
