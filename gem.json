@@ -8,7 +8,6 @@
   "Summary": "A community driven simplification of the physics system - based on forces rather than impulses.",
   "Tags": [ "Physics" ],
   "IconPath": "preview.png",
-  "IsGameGem": true,
   "Dependencies": [
     {
       "Uuid": "ff06785f7145416b9d46fde39098cb0c",
