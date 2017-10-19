@@ -21,7 +21,7 @@ namespace Copal
 			AZ::EditContext* editContext = serializeContext->GetEditContext();
 			if (editContext)
 			{
-				editContext->Class<GlobalRadialGravityComponent>("Constant Force Component", "Adds a simple constant force in specified vector")
+				editContext->Class<GlobalRadialGravityComponent>("Global Radial Gravity Component", "Adds a radial gravity force the affects all entities.")
 					->ClassElement(AZ::Edit::ClassElements::EditorData, "")
 					->Attribute(AZ::Edit::Attributes::Category, "Copal Physics")
 					->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/SequenceAgent.png")
