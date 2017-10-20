@@ -120,9 +120,9 @@ namespace Copal
 	}
 	void AggregatorBaseComponent::OnPrePhysicsUpdate()
 	{
-		float dt = currentTime - lastTime;
+		float dt = 0;
+		EBUS_EVENT_RESULT(dt, AZ::TickRequestBus, GetTickDeltaTime);
 		CalculateForces(dt);
-		lastTime = gEnv->pTimer->GetAsyncCurTime();
 	}
 
 	void AggregatorBaseComponent::ApplyOffCenterImpulsesOnMap(CopalForceMap& map , float dt, bool isTorque = false)
@@ -144,11 +144,6 @@ namespace Copal
 																	impulseActionAtPoint, false); // Apply the impulse to the object.
 			}
 		}
-	}
-
-	void AggregatorBaseComponent::OnPostPhysicsUpdate()
-	{
-		currentTime = gEnv->pTimer->GetAsyncCurTime();
 	}
 
 	void AggregatorBaseComponent::CalculateForces(float dt)

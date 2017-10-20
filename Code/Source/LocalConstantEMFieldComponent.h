@@ -52,8 +52,8 @@ namespace Copal
 		bool EFEnabled = false;
 		bool MFEnabled = false;
 
-		AZ::Vector3 EFVector = AZ::Vector3(10,10,-10);
-		AZ::Vector3 MFVector = AZ::Vector3(3, 7, -15);
+		AZ::Vector3 EFVector = AZ::Vector3(0,0,0);
+		AZ::Vector3 MFVector = AZ::Vector3(0,0,0);
 
 	};
 }

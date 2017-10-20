@@ -12,6 +12,7 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <LmbrCentral/Physics/PhysicsComponentBus.h>
 #include <LmbrCentral/Physics/PhysicsSystemComponentBus.h>
+#include <AzCore/Component/TickBus.h>
 
 #include <MathConversion.h>
 #include <ISystem.h>
@@ -42,7 +43,6 @@ namespace Copal
 			static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
 
 			void OnPrePhysicsUpdate() override;
-			void OnPostPhysicsUpdate() override;
 
 			void DeactivateDrag();
 
@@ -73,10 +73,6 @@ namespace Copal
 		protected:
 			CopalForceMap ForcesMap;
 			CopalForceMap TorquesMap;
-
-
-			float lastTime = 0.f;
-			float currentTime = 0.f;
 
 			AZ::Vector3 ForceSum = AZ::Vector3(0, 0, 0);
 			AZ::Vector3 TorqueSum = AZ::Vector3(0, 0, 0);

@@ -14,7 +14,7 @@ namespace Copal
 				->Field("Force Tag", &ForceBaseComponent::ForceTag)
 				;
 
-			AZ::EditContext* editContext = serializeContext->GetEditContext();
+			/*AZ::EditContext* editContext = serializeContext->GetEditContext();
 			if (editContext)
 			{
 				editContext->Class<ForceBaseComponent>("Force Source Component", "This component is the base for all force senders in this GEM.")
@@ -29,7 +29,7 @@ namespace Copal
 					->DataElement(0, &ForceBaseComponent::ForceTag, "Force Tag", "Type of force to be applied, only applied to entities who are able to handle those types.") //This is important, needs to be unique
 
 					;
-			}
+			}*/
 			AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(reflection);
 			if (behaviorContext)
 			{

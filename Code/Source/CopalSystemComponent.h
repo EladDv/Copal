@@ -2,13 +2,14 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-
 #include <Copal/CopalBus.h>
+#include <AzFramework\TargetManagement\TargetManagementComponent.h>
 
 namespace Copal
 {
     class CopalSystemComponent
         : public AZ::Component
+
         //, protected CopalPhysicsRequestsBus::Handler
     {
     public:
