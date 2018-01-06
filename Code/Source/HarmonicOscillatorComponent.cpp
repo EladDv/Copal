@@ -69,7 +69,7 @@ namespace Copal
 		AZ::TransformBus::EventResult(CurrentEntityLocation, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
 		pe_status_dynamics physicsStatus;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(AttachedEntity, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+		CopalCryPhysicsComponentRequestBus::Event(AttachedEntity, &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 
 		AZ::Vector3 ForceToApply = CurrentEntityLocation - AttachedEntityLocation;
 		ForceToApply = ForceToApply * (4 * pow(AZ::Constants::Pi, 2)) *  (physicsStatus.mass / pow(Period, 2)); // Calculate force of oscillator

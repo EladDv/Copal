@@ -83,7 +83,7 @@ namespace Copal
 	void AggregatorBaseComponent::DeactivateDrag()
 	{
 		IPhysicalEntity* physBuddy = nullptr;
-		LmbrCentral::CryPhysicsComponentRequestBus::EventResult(physBuddy, GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicalEntity);
+		CopalCryPhysicsComponentRequestBus::EventResult(physBuddy, GetEntityId(), &CopalCryPhysicsComponentRequestBus::Events::GetPhysicalEntity);
 
 		//Nullify all buoyancies, damping and world/entity gravity not from this GEM
 		pe_simulation_params simParams, testParams;
@@ -139,8 +139,8 @@ namespace Copal
 
 				impulseActionAtPoint.point = AZVec3ToLYVec3(it->second.positionVector);
 				impulseActionAtPoint.iApplyTime = 0;
-				LmbrCentral::CryPhysicsComponentRequestBus::Event(	GetEntityId(),
-																	&LmbrCentral::CryPhysicsComponentRequestBus::Events::ApplyPhysicsAction,
+				CopalCryPhysicsComponentRequestBus::Event(	GetEntityId(),
+																	&CopalCryPhysicsComponentRequestBus::Events::ApplyPhysicsAction,
 																	impulseActionAtPoint, false); // Apply the impulse to the object.
 			}
 		}
@@ -149,7 +149,7 @@ namespace Copal
 	void AggregatorBaseComponent::CalculateForces(float dt)
 	{
 		pe_status_dynamics physicsStatus;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+		CopalCryPhysicsComponentRequestBus::Event(GetEntityId(), &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 		AZ::Vector3 ForceVec = AZ::Vector3::CreateZero();
 		pe_action_impulse impulseActionForce, impulseActionTorque;
 		AZ::Vector3 impulseToApply; // Apply Forces
@@ -160,15 +160,15 @@ namespace Copal
 		impulseActionForce.impulse = AZVec3ToLYVec3(impulseToApply);
 		impulseActionForce.iApplyTime = 0;
 
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(	GetEntityId(),
-															&LmbrCentral::CryPhysicsComponentRequestBus::Events::ApplyPhysicsAction,
+		CopalCryPhysicsComponentRequestBus::Event(	GetEntityId(),
+															&CopalCryPhysicsComponentRequestBus::Events::ApplyPhysicsAction,
 															impulseActionForce, false); // Apply the impulse to the object.
 
 		impulseToApply = dt * TorqueSum;
 		impulseActionTorque.angImpulse = AZVec3ToLYVec3(impulseToApply);
 		impulseActionTorque.iApplyTime = 0;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(	GetEntityId(),
-															&LmbrCentral::CryPhysicsComponentRequestBus::Events::ApplyPhysicsAction,
+		CopalCryPhysicsComponentRequestBus::Event(	GetEntityId(),
+															&CopalCryPhysicsComponentRequestBus::Events::ApplyPhysicsAction,
 															impulseActionTorque, false); // Apply the impulse to the object.
 
 		ApplyOffCenterImpulsesOnMap(ForcesMap, dt, false);

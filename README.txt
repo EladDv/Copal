@@ -1,6 +1,6 @@
 COPAL - Community Physics Additions for Lumberyard
 
-Version: 0.4.2.1
+Version: 0.5.1
 
 -------------------------------------------------------------------------------------------------
 
@@ -8,11 +8,18 @@ Installation notes:
 
 1) Extract this zip into your Amazon\Lumberyard\1.X.0.0\dev\Gems folder.
 2) In the project configurator add this Gem to your project
+3) For Lumberyard 11 support, edit Copal/Code/Include/Copal/PhysicsIncludes.h and uncomment #define LY_VERSION_11
 3) Build the project.
 
 -------------------------------------------------------------------------------------------------
 
 Changelog:
+
+0.5.1 - Added support for Lumberyard 12
+- Change from PhysicsComponentRequestBus to CryPhysicsComponentRequestBus
+- Added preview logo
+
+--------------------------------------------------------------------------------------------------
 
 0.4.2.1 - Changed to MIT license
 - Changed to MIT license

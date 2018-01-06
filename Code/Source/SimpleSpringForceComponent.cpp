@@ -73,7 +73,7 @@ namespace Copal
 		AZ::TransformBus::EventResult(CurrentEntityLocation, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
 		pe_status_dynamics physicsStatus;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(AttachedEntity, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+		CopalCryPhysicsComponentRequestBus::Event(AttachedEntity, &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 
 		AZ::Vector3 RestPosition = (AttachedEntityLocation - CurrentEntityLocation).GetNormalizedExact() * RestLength; // Get position where the spring ends while at rest relative to the start.
 		RestPosition += CurrentEntityLocation; // add that to the actual location, get the world coordinates of the end of the resting spring

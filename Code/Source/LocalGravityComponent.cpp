@@ -100,7 +100,7 @@ namespace Copal
 				Force GravForce;
 				GravForce.tag = ForceTag;
 				pe_status_dynamics physicsStatus;
-				LmbrCentral::CryPhysicsComponentRequestBus::Event(EntityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+				CopalCryPhysicsComponentRequestBus::Event(EntityId, &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 				GravForce.strengthVector = GravitationalAcceleration * AZ::Vector3(physicsStatus.mass, physicsStatus.mass, physicsStatus.mass);
 				CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, GravForce);
 			}

@@ -76,7 +76,7 @@ namespace Copal
 			AZ::Vector3 DistanceVector = EntityPosition - ThisPosition; // Note that gravity is negative on the Z+ axis!
 			GravForce.strengthVector = DistanceVector.GetNormalizedExact() * ( AZ::VectorFloat(GravitationalFactor) / DistanceVector.GetLengthSq() );
 			pe_status_dynamics physicsStatus;
-			LmbrCentral::CryPhysicsComponentRequestBus::Event(EntityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+			CopalCryPhysicsComponentRequestBus::Event(EntityId, &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 			GravForce.strengthVector = GravForce.strengthVector * AZ::VectorFloat(physicsStatus.mass);
 			CopalPhysicsRequestsBus::Event(EntityId, &CopalPhysicsRequestsBus::Events::AddForce, ForceName, GravForce);
 		}

@@ -10,8 +10,7 @@
 
 #include <AzCore/Component/EntityBus.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
-#include <LmbrCentral/Physics/PhysicsComponentBus.h>
-#include <LmbrCentral/Physics/PhysicsSystemComponentBus.h>
+
 #include <AzCore/Component/TickBus.h>
 
 #include <MathConversion.h>
@@ -20,6 +19,7 @@
 #include <physinterface.h>
 
 #include <Copal/CopalBus.h>
+#include <Copal/PhysicsIncludes.h>
 
 namespace Copal
 {

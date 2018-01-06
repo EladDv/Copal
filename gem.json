@@ -3,7 +3,7 @@
   "Uuid": "eb5eede2084941298c1ae62540c57e2f",
   "Name": "Copal",
   "DisplayName": "Copal",
-  "Version": "0.5.0",
+  "Version": "0.5.1",
   "LinkType": "Dynamic",
   "Summary": "A community driven simplification of the physics system - based on forces rather than impulses.",
   "Tags": [ "Physics" ],
