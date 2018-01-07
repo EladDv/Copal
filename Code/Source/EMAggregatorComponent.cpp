@@ -86,7 +86,7 @@ namespace Copal
 	void EMAggregatorComponent::SetDensity(float density)
 	{
 		pe_status_dynamics physicsStatus;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+		CopalCryPhysicsComponentRequestBus::Event(GetEntityId(), &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 
 		ChargeDensity = density;
 		Charge = density * physicsStatus.mass;
@@ -94,7 +94,7 @@ namespace Copal
 	void EMAggregatorComponent::SetCharge(float charge)
 	{
 		pe_status_dynamics physicsStatus;
-		LmbrCentral::CryPhysicsComponentRequestBus::Event(GetEntityId(), &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+		CopalCryPhysicsComponentRequestBus::Event(GetEntityId(), &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 		if (physicsStatus.mass != 0)
 			ChargeDensity = charge / physicsStatus.mass;
 		else

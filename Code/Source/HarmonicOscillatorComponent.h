@@ -4,7 +4,7 @@
 namespace Copal
 {
 	class HarmonicOscillatorComponent
-		: public Copal::ForceBaseComponent
+		: public ForceBaseComponent
 	{
 	public:
 		AZ_COMPONENT(HarmonicOscillatorComponent, "{84588228-119D-47E2-B44F-933B05FF0707}");

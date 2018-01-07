@@ -127,7 +127,7 @@ namespace Copal
 				if (MFEnabled)
 				{
 					pe_status_dynamics physicsStatus;
-					LmbrCentral::CryPhysicsComponentRequestBus::Event(EntityId, &LmbrCentral::CryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
+					CopalCryPhysicsComponentRequestBus::Event(EntityId, &CopalCryPhysicsComponentRequestBus::Events::GetPhysicsStatus, physicsStatus);
 
 					EMForce.strengthVector = EMForce.strengthVector + ((LYVec3ToAZVec3(physicsStatus.v).Cross(MFVector))*tempV);
 				}

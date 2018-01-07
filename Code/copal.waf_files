@@ -7,7 +7,8 @@
     },
     "auto": {
         "Include": [
-            "Include/Copal/CopalBus.h"
+            "Include/Copal/CopalBus.h",
+			"Include/Copal/PhysicsIncludes.h"
         ],
         "Source": [
             "Source/CopalModule.cpp",
